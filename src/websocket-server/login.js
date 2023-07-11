@@ -1,22 +1,24 @@
 import users from '../db/userData.json' assert { type: "json" }
 import fs from 'fs';
 import path from 'path'
+// import updateRoom from './updateRoom.js'
 
 
-export const login=(reqName,reqPassword)=>{
+export const login= (reqName,reqPassword)=>{
 
 
   let user=users.find((user)=>user.name===reqName && user.password===reqPassword)
   let login=users.find((user)=>user.name===reqName)
 
     if (user){
-
         return(
             {
                 type:'reg',
                 data:JSON.stringify({
                   name:reqName,
-                  password:reqPassword
+                  password:reqPassword,
+                  error:false,
+                  errorText:'Ok'
                 }),
                 id:0
             }

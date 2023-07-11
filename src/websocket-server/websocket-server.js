@@ -1,5 +1,8 @@
 import { WebSocketServer } from 'ws';
 import { login } from './login.js';
+import { addShips } from './addShips.js';
+import {updateRoom} from './updateRoom.js';
+import { updateWinners } from './updateWinners.js';
 const WS_PORT=3000;
 
 export const websocket=()=>{
@@ -10,40 +13,71 @@ export const websocket=()=>{
     ws.on('error', console.error);
 
     ws.on('message', async function message(data) {
-      const parsed=JSON.parse(data)
-      const name=JSON.parse(parsed.data).name
-      const password=JSON.parse(parsed.data).password
       console.log('received: %s', data);
+      let stringified=data.toString()
+      let dataToObject=JSON.parse(stringified)
+      let type=dataToObject.type
+      console.log('toobject',dataToObject,'type',type)
 
-      switch(parsed.type){
-          case('reg'):{
-              const message=login(name, password)
-              console.log('message',message)
-              ws.send(JSON.stringify(message))
+
+        if(type==='reg'){
+          console.log('jestem w reg')
+            const name=JSON.parse(dataToObject.data).name
+            const password=JSON.parse(dataToObject.data).password
+            const message=login(name, password)
+
+            console.log('message',JSON.stringify(message))
+            ws.send(JSON.stringify(message))
+
+            const roomMessage=updateRoom(name)
+            console.log('roommesage',JSON.stringify(roomMessage))
+            ws.send(JSON.stringify(roomMessage))
+
+            // const winnerMessage= updateWinners(name,0)
+            // console.log('winnerMesage',winnerMessage)
+            // ws.send(JSON.stringify(winnerMessage))
+
           }
-          case("create_room"):{
-              ws.send()
+          else if(type==='create_room'){
+
+            console.log('jestem w room')
+              ws.send(
+                JSON.stringify({
+                  type: "update_room",
+                  data:
+                      JSON.stringify([
+                          {
+                              roomId: 1,
+                              roomUsers:
+                                  [
+                                      {
+                                          name: 'd',
+                                          index: 0,
+                                      }
+                                  ],
+                          },
+                      ]),
+                  id: 0,
+              })
+              )
           }
-      }
-      // console.log('stringify',JSON.stringify(data))
-      // console.log(JSON.stringify({type:"reg",data:JSON.stringify(parsed.data),id:0}))
-      // console.log(parsed.type)
-      // if(parsed.type==='reg'){
-
-      // }
-      // await registerOrLogin
-    });
-
-  //   ws.send(JSON.stringify({
-  //     type: "reg",
-  //     data:
-  //         JSON.stringify({
-  //             name:'M',
-  //             password: 'Password',
-  //         }),
-  //     id: 0,
-  // }));
-  });
+          else if (type==='add_user_to_room') {
+            ws.send(JSON.stringify({
+              type: "create_game", //send for both players in the room
+              data:
+                  JSON.stringify({
+                      idGame: 1,
+                      idPlayer: 1,
+                  }),
+              id: 0,
+          }))
+          }
+          else if (type==='add_ships'){
+            const message=  addShips(dataToObject)
+            ws.send(JSON.stringify(message))
+          }
+      })})
 
   console.log(`Websocket server running on ${WS_PORT} port!`)
-}
+  }
+
