@@ -1,46 +1,71 @@
-import {users} from '../db/userData.js'
+import users from '../db/userData.json' assert { type: "json" }
+import fs from 'fs';
+import path from 'path'
 
 
-export const login=(name,password)=>{
-  console.log(name,password)
-  console.log('users',users)
-  const user=users.find((user)=>user.name===name)
+export const login=(reqName,reqPassword)=>{
+
+
+  let user=users.find((user)=>user.name===reqName && user.password===reqPassword)
+  let login=users.find((user)=>user.name===reqName)
+
     if (user){
-      if(user.password===password){
+
         return(
             {
                 type:'reg',
                 data:JSON.stringify({
-                  name:name,
-                  password:password
+                  name:reqName,
+                  password:reqPassword
                 }),
                 id:0
             }
           )
 
       }
-      else {
-        console.log('bad user')
-        users.push({name:name,password:password})
-        console.log('users2',users)
+
+      else if (login){
+        console.log('bad password')
+
+        const newUser={
+          name:reqName,
+          password:reqPassword
+        }
+
+
+        users.push(newUser)
+
+        fs.writeFileSync(path.resolve('src/db/userData.json'), JSON.stringify(users), 'utf8')
+
         return {
           type:'reg',
           data:JSON.stringify({
-            name:name,
-            password:password,
+            name:reqName,
+            password:reqPassword,
             error:true,
             errorText:'Wrong password'
           }),
           id:0
       }
       }
-    }
+
     else {
+      console.log('bad user')
+
+      const newUser={
+        name:reqName,
+        password:reqPassword
+      }
+
+      users.push(newUser)
+
+      fs.writeFileSync(path.resolve('src/db/userData.json'), JSON.stringify(users), 'utf8')
+
       return {
         type:'reg',
         data:JSON.stringify({
-          name:name,
-          password:password,
+          name:reqName,
+          password:reqPassword,
           error:true,
           errorText:'There is no such user'
         }),
@@ -52,36 +77,3 @@ export const login=(name,password)=>{
 
 
 
-// export const registerOrLogin = (username, password) => {
-//   return new Promise((resolve) => {
-//     const registeredUser = users.find((user) => user.name === username);
-//     if (registeredUser) {
-//       if (registeredUser.password === password) {
-//         resolve(registeredUser);
-//       } else {
-//         const userError = {
-//           name: username,
-//           index: users.length,
-//           error: true,
-//           errorText: 'Wrong Password',
-//         };
-//         resolve(userError);
-//       }
-//     } else {
-//       const userToResolve = {
-//         name: username,
-//         index: users.length,
-//         error: false,
-//         errorText: '',
-//       };
-//       const newUser= {
-//         name: username,
-//         password: password,
-//         index: users.length,
-//       };
-//       resolve(userToResolve);
-//       users.push(newUser);
-//       console.log(users)
-//     }
-//   });
-// };

@@ -15,12 +15,6 @@ export const websocket=()=>{
       const password=JSON.parse(parsed.data).password
       console.log('received: %s', data);
 
-      console.log(JSON.stringify({
-          type:'reg',
-          data:parsed.data,
-          id:0
-      }
-      ))
       switch(parsed.type){
           case('reg'):{
               const message=login(name, password)
