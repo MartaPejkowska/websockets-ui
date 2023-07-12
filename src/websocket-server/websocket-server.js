@@ -4,8 +4,9 @@ import { addShips } from './addShips.js';
 import {updateRoom} from './updateRoom.js';
 import { updateWinners } from './updateWinners.js';
 import { addUser } from './addUser.js';
+import { attack } from './attack.js';
 const WS_PORT=3000;
-let names=[]
+const occupiedFields=[]
 
 export const websocket=()=>{
   const wss = new WebSocketServer({ port: 3000 });
@@ -99,10 +100,24 @@ export const websocket=()=>{
         // })
           }
           else if (type==='add_ships'){
-            const message=  addShips(dataToObject)
-            ws.send(JSON.stringify(message))
+            const addMessage=  addShips(dataToObject.data)
+            console.log('addmessage',addMessage)
+            ws.send(JSON.stringify(addMessage.message))
+            occupiedFields.push(addMessage.occupiedFields)
+
           }
+          else if (type==='attack'){
+
+            const attackMessage=attack(dataToObject.data, occupiedFields)
+            console.log(attackMessage)
+            wss.clients.forEach(function e(ws){
+            ws.send(JSON.stringify(attackMessage.attackMessage))
+            if(attackMessage.turnMessage){
+              ws.send(JSON.stringify(attackMessage.turnMessage))
+            }
+          })}
       })
+
 
 
 

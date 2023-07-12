@@ -20,7 +20,7 @@ export const addUser=( indexRoom)=>{
       type: 'create_game',
       data: JSON.stringify({
         idGame,
-        iduser:indexUserOne ,
+        idPlayer:indexUserOne ,
       }),
       id:0,
     };
@@ -29,7 +29,7 @@ export const addUser=( indexRoom)=>{
       type: 'create_game',
       data: JSON.stringify({
         idGame,
-        iduser: indexUserTwo,
+        idPlayer: indexUserTwo,
       }),
       id:0,
     };
