@@ -1,22 +1,19 @@
-import users from '../db/userData.json' assert { type: "json" }
-import fs from 'fs';
-import path from 'path'
-// import updateRoom from './updateRoom.js'
+import {users} from '../db/userData.js'
 
 
 export const login= (reqName,reqPassword)=>{
-
+  let indexPlayer=users.length
 
   let user=users.find((user)=>user.name===reqName && user.password===reqPassword)
-  let login=users.find((user)=>user.name===reqName)
 
-    if (user){
+    if (!user){
+      users.push({name:reqName,password:reqPassword,index:indexPlayer})
         return(
             {
                 type:'reg',
                 data:JSON.stringify({
                   name:reqName,
-                  password:reqPassword,
+                  index:indexPlayer,
                   error:false,
                   errorText:'Ok'
                 }),
@@ -26,56 +23,25 @@ export const login= (reqName,reqPassword)=>{
 
       }
 
-      else if (login){
-        console.log('bad password')
-
-        const newUser={
-          name:reqName,
-          password:reqPassword
-        }
-
-
-        users.push(newUser)
-
-        fs.writeFileSync(path.resolve('src/db/userData.json'), JSON.stringify(users), 'utf8')
+      else if (user){
+        console.log('already exist')
 
         return {
           type:'reg',
           data:JSON.stringify({
             name:reqName,
-            password:reqPassword,
+            index:null,
             error:true,
-            errorText:'Wrong password'
+            errorText:'User already exist'
           }),
           id:0
       }
       }
 
-    else {
-      console.log('bad user')
-
-      const newUser={
-        name:reqName,
-        password:reqPassword
-      }
-
-      users.push(newUser)
-
-      fs.writeFileSync(path.resolve('src/db/userData.json'), JSON.stringify(users), 'utf8')
-
-      return {
-        type:'reg',
-        data:JSON.stringify({
-          name:reqName,
-          password:reqPassword,
-          error:true,
-          errorText:'There is no such user'
-        }),
-        id:0
-    }
+    console.log('users',users)
     }
 
-  }
+
 
 
 

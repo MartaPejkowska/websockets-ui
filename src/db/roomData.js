@@ -1,1 +1,1 @@
-export const roomUsers=[]
+export const rooms=[]
