@@ -7,8 +7,9 @@ export const attack=(data:any, occupiedFields:occupiedFieldsType[])=>{
 const occupiedFieldsUserOne=occupiedFields[0]
 const occupiedFieldsUserTwo=occupiedFields[1]
 
-
+ // @ts-ignore
 const indexOne=occupiedFieldsUserOne[0].indexPlayer
+// @ts-ignore
 const indexTwo=occupiedFieldsUserTwo[0].indexPlayer
 
 const currentPlayerIndex= JSON.parse(data).indexPlayer
@@ -18,7 +19,7 @@ console.log('currentindex',currentPlayerIndex)
 console.log('1',occupiedFieldsUserOne),
 console.log('2',occupiedFieldsUserTwo)
 console.log('index',indexOne)
-
+// @ts-ignore
 occupiedFieldsUserOne.some(e=>e.x===coordinates.x && e.y===coordinates.y)
 
 const updateMessage=(status:string)=>{
@@ -51,8 +52,8 @@ const updateMessage=(status:string)=>{
     }
     else return attackMessage
 }
-
 if(currentPlayerIndex===indexOne){
+    // @ts-ignore
     if(occupiedFieldsUserTwo.some(e=>e.x===coordinates.x && e.y===coordinates.y)){
         let status='shot'
         const message=updateMessage(status)
@@ -69,7 +70,7 @@ if(currentPlayerIndex===indexOne){
 }
 
 else if (currentPlayerIndex!== indexOne){
-
+// @ts-ignore
     if(occupiedFieldsUserOne.some(e=>e.x===coordinates.x && e.y===coordinates.y)){
         let status='shot'
         const message=updateMessage(status)

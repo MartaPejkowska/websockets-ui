@@ -1,5 +1,5 @@
 import { addShipsType} from "../types/addShipType"
-import { occupiedFieldsType} from '../types/occupiedFieldsType'
+
 
 export const addShips=(data:addShipsType)=>{
 
@@ -7,7 +7,7 @@ export const addShips=(data:addShipsType)=>{
     const ships=parsedData.ships
     const indexPlayer:number =parsedData.indexPlayer
 
-    const occupiedFields:occupiedFieldsType=[]
+    const occupiedFields=[]
 
     occupiedFields.push({indexPlayer:indexPlayer})
 

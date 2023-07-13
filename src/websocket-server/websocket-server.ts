@@ -1,14 +1,14 @@
 import { WebSocketServer } from 'ws';
 import {WebSocket} from 'ws'
-import { login } from './login.js';
-import { addShips } from './addShips.js';
-import {updateRoom} from './updateRoom.js';
-import { updateWinners } from './updateWinners.js';
-import { addUser } from './addUser.js';
-import { attack } from './attack.js';
-import { addMessageType } from '../types/addMessageType.js';
-import { occupiedFieldsType } from '../types/occupiedFieldsType.js';
-import { attackMessageType } from '../types/attackMessageType.js';
+import { login } from './login';
+import { addShips } from './addShips';
+import {updateRoom} from './updateRoom';
+import { updateWinners } from './updateWinners';
+import { addUser } from './addUser';
+import { attack } from './attack';
+import { addMessageType } from '../types/addMessageType';
+import { occupiedFieldsType } from '../types/occupiedFieldsType';
+import { attackMessageType } from '../types/attackMessageType';
 
 const occupiedFields:occupiedFieldsType=[]
 
@@ -103,15 +103,16 @@ export const websocket=(PORT:number)=>{
         // })
           }
           else if (type==='add_ships'){
-            const addMessage=  addShips(dataToObject.data)
+            const addMessage=  addShips(dataToObject.data) as addMessageType
             console.log('addmessage',addMessage)
             ws.send(JSON.stringify(addMessage.message))
+            // @ts-ignore
             occupiedFields.push(addMessage.occupiedFields)
 
           }
           else if (type==='attack'){
-
-            const attackMessage=attack(dataToObject.data, occupiedFields)
+// @ts-ignore
+            const attackMessage=attack(dataToObject.data, occupiedFields) as attackMessageType
             console.log(attackMessage)
             wss.clients.forEach(function e(ws:WebSocket){
             ws.send(JSON.stringify(attackMessage!.attackMessage))

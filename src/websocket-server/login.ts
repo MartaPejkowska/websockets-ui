@@ -1,5 +1,5 @@
-import {users} from '../db/userData.js'
-import { UserType } from '../types/userType.js'
+import {users} from '../db/userData'
+import { UserType } from '../types/userType'
 
 
 export const login= (reqName:string,reqPassword:string)=>{

@@ -1,7 +1,7 @@
-import { rooms } from "../db/roomData.js"
-import {users} from '../db/userData.js'
-import { RoomType } from "../types/roomType.js";
-import { roomUserType } from "../types/roomUserType.js";
+import { rooms } from "../db/roomData"
+import {users} from '../db/userData'
+import { RoomType } from "../types/roomType";
+import { roomUserType } from "../types/roomUserType";
 
 
 export const updateRoom=()=>{

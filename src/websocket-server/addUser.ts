@@ -1,7 +1,8 @@
-import { rooms } from '../db/roomData.js';
-import {games} from '../db/gamesData.js'
-import { RoomType } from '../types/roomType.js';
-import { gameType } from '../types/gameType.js';
+import { rooms } from '../db/roomData';
+import {games} from '../db/gamesData'
+import { RoomType } from '../types/roomType';
+import { gameType } from '../types/gameType';
+import { roomUserType } from '../types/roomUserType';
 
 export const addUser=( indexRoom:number)=>{
 
@@ -14,6 +15,7 @@ export const addUser=( indexRoom:number)=>{
     const indexUserTwo =  roomActive?.roomUsers[1][0].index;
 
     const idGame = games.length;
+    // @ts-ignore
     const game:gameType = { idGame, users: [userOne, userTwo] };
     games.push(game);
     console.log('games',games)
