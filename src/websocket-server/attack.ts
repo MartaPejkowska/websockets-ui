@@ -1,9 +1,13 @@
-export const attack=(data, occupiedFields)=>{
+import { occupiedFieldsType } from "../types/occupiedFieldsType"
+
+export const attack=(data:any, occupiedFields:occupiedFieldsType[])=>{
     console.log('in attack data',data)
     const coordinates={x:JSON.parse(data).x,y:JSON.parse(data).y}
 
 const occupiedFieldsUserOne=occupiedFields[0]
 const occupiedFieldsUserTwo=occupiedFields[1]
+
+
 const indexOne=occupiedFieldsUserOne[0].indexPlayer
 const indexTwo=occupiedFieldsUserTwo[0].indexPlayer
 
@@ -17,7 +21,7 @@ console.log('index',indexOne)
 
 occupiedFieldsUserOne.some(e=>e.x===coordinates.x && e.y===coordinates.y)
 
-const updateMessage=(status)=>{
+const updateMessage=(status:string)=>{
     const attackMessage={
         type: "attack",
         data:

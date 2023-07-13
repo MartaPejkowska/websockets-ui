@@ -1,10 +1,11 @@
 import {users} from '../db/userData.js'
+import { UserType } from '../types/userType.js'
 
 
-export const login= (reqName,reqPassword)=>{
-  let indexPlayer=users.length
+export const login= (reqName:string,reqPassword:string)=>{
+  let indexPlayer: number=users.length
 
-  let user=users.find((user)=>user.name===reqName && user.password===reqPassword)
+  let user:UserType|undefined=users.find((user)=>user.name===reqName && user.password===reqPassword)
 
     if (!user){
       users.push({name:reqName,password:reqPassword,index:indexPlayer})

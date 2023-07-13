@@ -1,4 +1,4 @@
-export const updateWinners=(receivedName,wins)=>{
+export const updateWinners=(receivedName:string,wins:number)=>{
     return({
         type: "update_winners",
         data:

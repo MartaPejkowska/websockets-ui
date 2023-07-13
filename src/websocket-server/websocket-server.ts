@@ -1,17 +1,21 @@
 import { WebSocketServer } from 'ws';
+import {WebSocket} from 'ws'
 import { login } from './login.js';
 import { addShips } from './addShips.js';
 import {updateRoom} from './updateRoom.js';
 import { updateWinners } from './updateWinners.js';
 import { addUser } from './addUser.js';
 import { attack } from './attack.js';
-const WS_PORT=3000;
-const occupiedFields=[]
+import { addMessageType } from '../types/addMessageType.js';
+import { occupiedFieldsType } from '../types/occupiedFieldsType.js';
+import { attackMessageType } from '../types/attackMessageType.js';
 
-export const websocket=()=>{
-  const wss = new WebSocketServer({ port: 3000 });
+const occupiedFields:occupiedFieldsType=[]
 
-  wss.on('connection', function connection(ws) {
+export const websocket=(PORT:number)=>{
+  const wss = new WebSocketServer({ port:PORT });
+
+  wss.on('connection', function connection(ws:WebSocket) {
 
     ws.on('error', console.error);
 
@@ -29,8 +33,7 @@ export const websocket=()=>{
             const password=JSON.parse(dataToObject.data).password
             const message=login(name, password)
 
-            // names.push(name)
-            // console.log('names',names)
+
 
             console.log('message',JSON.stringify(message))
             ws.send(JSON.stringify(message))
@@ -45,10 +48,10 @@ export const websocket=()=>{
 
           }
           else if(type==='create_room'){
-            let roomResponse=updateRoom(wss.client)
+            let roomResponse=updateRoom()
             console.log(roomResponse)
 
-            wss.clients.forEach(function e(ws){
+            wss.clients.forEach(function e(ws:WebSocket){
               ws.send(JSON.stringify(roomResponse))
             })
             // wss.clients.forEach(function e(ws){
@@ -110,9 +113,9 @@ export const websocket=()=>{
 
             const attackMessage=attack(dataToObject.data, occupiedFields)
             console.log(attackMessage)
-            wss.clients.forEach(function e(ws){
-            ws.send(JSON.stringify(attackMessage.attackMessage))
-            if(attackMessage.turnMessage){
+            wss.clients.forEach(function e(ws:WebSocket){
+            ws.send(JSON.stringify(attackMessage!.attackMessage))
+            if(attackMessage!.turnMessage){
               ws.send(JSON.stringify(attackMessage.turnMessage))
             }
           })}
@@ -130,6 +133,6 @@ export const websocket=()=>{
 
 
 
-  console.log(`Websocket server running on ${WS_PORT} port!`)
+  console.log(`Websocket server running on ${PORT} port!`)
   }
 

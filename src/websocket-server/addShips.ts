@@ -1,14 +1,19 @@
-export const addShips=(data)=>{
+import { addShipsType} from "../types/addShipType"
+import { occupiedFieldsType} from '../types/occupiedFieldsType'
 
-    const parsedData=JSON.parse(data)
+export const addShips=(data:addShipsType)=>{
+
+    const parsedData=JSON.parse(data.toString())
     const ships=parsedData.ships
-    const indexPlayer=parsedData.indexPlayer
+    const indexPlayer:number =parsedData.indexPlayer
 
-    const occupiedFields=[]
+    const occupiedFields:occupiedFieldsType=[]
 
     occupiedFields.push({indexPlayer:indexPlayer})
 
-    ships.forEach(ship => {
+    // ships.forEach(ship:shipsType =>
+    for (let ship of ships)
+        {
 
         if(ship.direction===true){
 
@@ -23,7 +28,7 @@ export const addShips=(data)=>{
             occupiedFields.push({x:(ship.position.x+j),y:ship.position.y})
            }
         }
-    });
+    };
     console.log(occupiedFields)
 
     const message={
