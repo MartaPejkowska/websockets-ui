@@ -37,14 +37,11 @@ export const websocket=(PORT:number)=>{
 
             console.log('message',JSON.stringify(message))
             ws.send(JSON.stringify(message))
+            // const index=JSON.parse(message!.data.toString()).index
 
             // const roomMessage=updateRoom(name)
             // console.log('roommesage',JSON.stringify(roomMessage))
-            // ws.send(JSON.stringify(roomMessage))
-
-            // const winnerMessage= updateWinners(name,0)
-            // console.log('winnerMesage',winnerMessage)
-            // ws.send(JSON.stringify(winnerMessage))
+            // ws.send(JSON.stringify(roomMessage)
 
           }
           else if(type==='create_room'){
@@ -54,25 +51,15 @@ export const websocket=(PORT:number)=>{
             wss.clients.forEach(function e(ws:WebSocket){
               ws.send(JSON.stringify(roomResponse))
             })
-            // wss.clients.forEach(function e(ws){
-            //   ws.send(JSON.stringify({
-            //     type: "update_room",
-            //     data:
-            //         JSON.stringify([
-            //             {
-            //                 roomId: 1,
-            //                 roomUsers:
-            //                     [
-            //                         {
-            //                             name: names[0],
-            //                             index: 0,
-            //                         }
-            //                     ],
-            //             },
-            //         ]),
-            //     id: 0,
-            //   }))
-            // })
+            wss.clients.forEach((client)=>{
+              if(client === ws){
+                client.send(JSON.stringify(roomResponse.responseOne))
+              }
+              else{
+                client.send(JSON.stringify(roomResponse.responseTwo))
+              }
+
+            })
 
           }
           else if (type==='add_user_to_room') {
@@ -82,25 +69,13 @@ export const websocket=(PORT:number)=>{
             console.log(addMessage.responseForOne)
 
             wss.clients.forEach((client)=>{
-              if(client != ws){
+              if(client !== ws){
                 client.send(JSON.stringify(addMessage.responseForOne))
               }
               else
                {client.send(JSON.stringify(addMessage.responseForTwo))}
             })
 
-
-
-        //     ws.send(JSON.stringify({
-        //       type: "create_game", //send for both players in the room
-        //       data:
-        //           JSON.stringify({
-        //               idGame: 1,
-        //               idPlayer: 1,
-        //           }),
-        //       id: 0,
-        //   }))
-        // })
           }
           else if (type==='add_ships'){
             const addMessage=  addShips(dataToObject.data) as addMessageType
@@ -115,14 +90,35 @@ export const websocket=(PORT:number)=>{
             const attackMessage=attack(dataToObject.data, occupiedFields) as attackMessageType
             console.log(attackMessage)
             wss.clients.forEach(function e(ws:WebSocket){
-            ws.send(JSON.stringify(attackMessage!.attackMessage))
-            if(attackMessage!.turnMessage){
+            if(!attackMessage.attackMessage && !attackMessage.turnMessage){
+                ws.send(JSON.stringify(attackMessage))
+// @ts-ignore
+                const dataatack=attackMessage.data
+                const winnerId=JSON.parse(dataatack).winPlayer
+
+                const winMessage=updateWinners('',1,winnerId)
+                ws.send(JSON.stringify(winMessage))
+
+              }
+            else if(attackMessage.attackMessage){
+              ws.send(JSON.stringify(attackMessage.attackMessage))}
+            else if(attackMessage.turnMessage){
               ws.send(JSON.stringify(attackMessage.turnMessage))
             }
           })}
+          else if(type==='randomAttack'){
+            const currentPlayerIndex= JSON.parse(dataToObject.data).indexPlayer
+            console.log(currentPlayerIndex)
+            ws.send(JSON.stringify({
+              type: "turn",
+              data:
+                  {
+                      currentPlayer: currentPlayerIndex,
+                  },
+              id: 0,
+          }))
+          }
       })
-
-
 
 
       ws.on('close', ()=>{
@@ -131,7 +127,6 @@ export const websocket=(PORT:number)=>{
     }
 
       )
-
 
 
   console.log(`Websocket server running on ${PORT} port!`)

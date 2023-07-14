@@ -10,7 +10,7 @@ export const updateRoom=()=>{
      const roomUsers:roomUserType[][]=users.map(user=>{
         return [{name:user.name,index:user.index}]
       })
-       console.log(roomUsers)
+       console.log(roomUsers[0])
         const newRoom:RoomType={
             roomId:rooms.length,
             roomUsers: roomUsers
@@ -18,12 +18,39 @@ export const updateRoom=()=>{
         rooms.push(newRoom)
         console.log('rooms',JSON.stringify(rooms))
 
-          const response = {
+          const responseOne = {
             type: 'update_room',
-            data: JSON.stringify(rooms),
+            data: JSON.stringify( [
+              {
+                  roomId: rooms[0].roomId,
+                  roomUsers:
+                      [
+                          {
+                              name: roomUsers[0][0].name,
+                              index: roomUsers[0][0].index,
+                          }
+                      ],
+              },
+          ],),
             id:0,
           };
-          return response
+          const responseTwo = {
+            type: 'update_room',
+            data: JSON.stringify( [
+              {
+                  roomId: rooms[0].roomId,
+                  roomUsers:
+                      [
+                          {
+                              name: roomUsers[1][0].name,
+                              index: roomUsers[1][0].index,
+                          }
+                      ],
+              },
+          ],),
+            id:0,
+          };
+          return {responseOne,responseTwo}
         ;
       };
 
