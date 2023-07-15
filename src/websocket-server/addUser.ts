@@ -2,7 +2,7 @@ import { rooms } from '../db/roomData';
 import {games} from '../db/gamesData'
 import { RoomType } from '../types/roomType';
 import { gameType } from '../types/gameType';
-import { roomUserType } from '../types/roomUserType';
+
 
 export const addUser=( indexRoom:number)=>{
 

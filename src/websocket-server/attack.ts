@@ -91,9 +91,17 @@ const updateMessage=(status:string)=>{
 if(currentPlayerIndex===indexOne){
     // @ts-ignore
     if(occupiedFieldsUserTwo.some(e=>e.x===coordinates.x && e.y===coordinates.y)){
-        shotFields.push({coordinates,currentPlayerIndex})
-        let status='shot'
+        const exist=shotFields.filter(e => e.coordinates.x === coordinates.x && e.coordinates.y===coordinates.y && e.currentPlayerIndex===currentPlayerIndex)
+        console.log('exist',exist)
 
+        if (exist.length>0){
+            console.log('you already shot this place')
+        }
+        else {
+            shotFields.push({coordinates,currentPlayerIndex})
+        }
+        let status='shot'
+        console.log('shotfields',shotFields)
         const message=updateMessage(status)
         return message
     }
@@ -110,8 +118,17 @@ if(currentPlayerIndex===indexOne){
 else if (currentPlayerIndex!== indexOne){
 // @ts-ignore
     if(occupiedFieldsUserOne.some(e=>e.x===coordinates.x && e.y===coordinates.y)){
-        shotFields.push({coordinates,currentPlayerIndex})
+        const exist=shotFields.filter(e => e.coordinates.x === coordinates.x && e.coordinates.y===coordinates.y && e.currentPlayerIndex===currentPlayerIndex)
+        console.log('exist',exist)
+
+        if (exist.length>0){
+            console.log('you already shot this place')
+        }
+        else {
+            shotFields.push({coordinates,currentPlayerIndex})
+        }
         let status='shot'
+        console.log('shotfields',shotFields)
         const message=updateMessage(status)
 
         return message

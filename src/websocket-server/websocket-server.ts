@@ -89,21 +89,26 @@ export const websocket=(PORT:number)=>{
 // @ts-ignore
             const attackMessage=attack(dataToObject.data, occupiedFields) as attackMessageType
             console.log(attackMessage)
+            if(!attackMessage.attackMessage && !attackMessage.turnMessage){
+              // @ts-ignore
+              const dataatack=attackMessage.data
+              const winnerId=JSON.parse(dataatack).winPlayer
+              const winMessage=updateWinners('',1,winnerId)
+              wss.clients.forEach(function e(ws:WebSocket){
+                ws.send(JSON.stringify(winMessage))
+              })
+            }
             wss.clients.forEach(function e(ws:WebSocket){
             if(!attackMessage.attackMessage && !attackMessage.turnMessage){
                 ws.send(JSON.stringify(attackMessage))
-// @ts-ignore
-                const dataatack=attackMessage.data
-                const winnerId=JSON.parse(dataatack).winPlayer
-
-                const winMessage=updateWinners('',1,winnerId)
-                ws.send(JSON.stringify(winMessage))
-
               }
-            else if(attackMessage.attackMessage){
-              ws.send(JSON.stringify(attackMessage.attackMessage))}
-            else if(attackMessage.turnMessage){
+            else if(attackMessage.attackMessage && attackMessage.turnMessage){
+              ws.send(JSON.stringify(attackMessage.attackMessage))
               ws.send(JSON.stringify(attackMessage.turnMessage))
+            }
+
+            else if(!attackMessage.turnMessage){
+              ws.send(JSON.stringify(attackMessage.attackMessage))
             }
           })}
           else if(type==='randomAttack'){
